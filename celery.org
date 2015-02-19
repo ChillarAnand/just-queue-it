@@ -5,7 +5,6 @@
 #+OPTIONS: num:nil
 #+OPTIONS: toc:nil reveal_mathjax:t
 
-#+REVEAL_ROOT: file:///home/anand/Projects/js/reveal.js/
 #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/2.5.0/
 
 #+REVEAL_TRANS: linear
