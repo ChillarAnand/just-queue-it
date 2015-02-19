@@ -1,0 +1,335 @@
+#+AUTHOR: Anand Pandikunta
+
+#+STARTUP: showall
+
+#+OPTIONS: num:nil
+#+OPTIONS: toc:nil reveal_mathjax:t
+
+#+REVEAL_ROOT: file:///home/anand/Projects/js/reveal.js/
+
+#+REVEAL_TRANS: linear
+#+REVEAL-SLIDE-NUMBER: t
+#+REVEAL_THEME: simple
+
+#+BIND: org-confirm-babel-evaluate nil
+
+
+
+* Just Queue It!
+Queue Everything & Delight Everyone.
+
+
+* About This Talk.
+
+Why Celery?
+
+How Celery Works?
+
+Running Tasks.
+
+Canvas Workflow.
+
+Monitoring Celery.
+
+
+*  Why Celery?
+
+***** Running Tasks In Background.
+***** Automatic Retrying Failed Tasks.
+***** Multi Processing.
+***** Scheduling Periodic Work.
+
+
+* What Is Celery?
+
+***** It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+
+***** Task queues are used as a mechanism to distribute work across threads or machines.
+
+
+
+* How Celery Works?
+
+* A Simple Queue
+
+#+BEGIN_SRC ditaa :file queue.png :cmdline -r
+
+            Shopping Mall Queues
+
+                                        +-------------+
+                                        |             |
+                                        |             |
+            Shoppers ------------------>|   Cashier   |
+                                        |             |
+                                        |             |
+                                        +-------------+
+
+#+END_SRC
+
+* A Simple Python Process
+
+#+BEGIN_SRC ditaa :file python.png :cmdline -r
+
+             Processing A Set Of Prime Numbers
+
+                                        +-------------+
+                                        |             |
+                                        |             |
+              Primes ------------------>|   Python    |
+                                        |             |
+                                        |             |
+                                        +-------------+
+
+#+END_SRC
+
+
+* Token Based Queue System
+
+#+BEGIN_SRC ditaa :file bank.png :cmdline -r
+
+                     Paying Cash In A Bank
+
+  +-----------------+
+  |                 |
+  |  Token Counter  |
+  |                 |
+  +-----------------+
+
+                                 +----------------------------+
+                                 |                            |
+                                 |         Workers            |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Cashier 1  |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Cashier 2  |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Cashier 3  |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 +----------------------------+
+
+#+END_SRC
+
+
+* Running a task with celery
+
+#+BEGIN_SRC ditaa :file celery.png :cmdline -r
+
+                      Running A Task With Celery
+
+  +-----------------+
+  |                 |
+  |     Broker      |
+  |                 |
+  +-----------------+
+
+                                 +----------------------------+
+                                 |                            |
+                                 |         Workers            |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Worker 1   |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Worker 2   |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 |      +-------------+       |
+                                 |      |             |       |
+                                 |      |  Worker 3   |       |
+                                 |      |             |       |
+                                 |      +-------------+       |
+                                 |                            |
+                                 +----------------------------+
+
+#+END_SRC
+
+* Getting Started
+
+Install Celery
+
+Pick a broker & install it.
+
+Add tasks & start processing them.
+
+
+
+* Supported Brokers
+[[./brokers.png]]
+
+
+
+* Which Broker?
+
+Low volume tasks - Any broker.
+
+High volume tasks - RabbitMQ or Redis.
+
+
+* RabbitMQ
+(Designed for messaging)
+
+Advanced Routing.
+
+Reliable delivery through acknowledgement.
+
+Can push > 100k messages per second.
+
+
+* Redis
+(In memory data store)
+
+Lightweight.
+
+Blazing fast.
+
+
+* Tasks
+
+#+BEGIN_SRC python
+# task.py
+from celery import Celery
+
+app = Celery('tasks', backend='amqp',
+             broker='amqp://guest@localhost//')
+
+
+@app.task()
+def add(x, y):
+    return x + y
+
+#+END_src
+
+#+BEGIN_SRC python
+
+# add tasks into queue
+
+result = add.apply_async(args=[3, 4])  # or
+
+result = add.delay(3, 4)
+
+#+END_src
+
+#+BEGIN_SRC python
+# check result
+result.ready()  # result.status
+result.get()
+#+END_src
+
+
+* Workers
+
+#+BEGIN_SRC sh
+
+celery worker --help  # all options
+
+celery worker -A task -l info -n foo_worker
+
+celery worker -A task -c 8 --logfile=foo.log
+
+celery worker -l info -A task -Q vip
+
+#+END_src
+
+#+BEGIN_SRC sh
+
+celery inspect active
+
+celery inspect active_queues
+
+#+END_SRC
+
+
+
+* Canvas Workflow
+
+#+BEGIN_SRC python
+
+add.s(2, 3)  # subtask - signature object
+
+add.si(2, 3)  # immutable signature object
+
+result = chain(add.s(2, 2), add.s(4))()  # chain
+
+result = group(add.s(i, i) for i in range(10))()  # group
+
+result = chord((add.s(i, i) for i in xrange(10)), xsum.s())()  # chord
+
+#+END_src
+
+
+* Routing
+
+#+BEGIN_SRC python
+
+# run multiple tasks
+
+add.apply_async([1, 2], queue='add_queue')
+
+sub.apply_async([3, 4], queue='sub_queue')
+
+#+END_src
+
+#+BEGIN_SRC sh
+
+# run multiple workers
+
+celery worker -l info -A tasks -Q add_queue
+
+celery worker -l info -A tasks -Q sub_queue
+
+#+END_src
+
+
+* Monitoring.
+
+Flower: Real-time monitor & web admin for Celery.
+
+
+* Web hooks
+
+Integrating with other languages/frameworks
+
+Call a task using GET/POST request & retrieve result.
+
+#+BEGIN_SRC sh
+
+curl -X POST http://localhost:5555/api/task/async-apply/my_app.test_task
+
+#+END_SRC
+
+
+
+* Where To Go From Here?
+
+
+Celery Docs: http://celery.readthedocs.org/
+
+Celery IRC:  #celery
+
+Flower REST API: http://nbviewer.ipython.org/github/mher/flower/blob/master/docs/api.ipynb
+
+CELERY - BEST PRACTICES: https://denibertovic.com/posts/celery-best-practices/
+
+3 GOTCHAS FOR CELERY: http://wiredcraft.com/blog/3-gotchas-for-celery/
+
+Advanced task management with celery: http://pyvideo.org/video/2843/painting-on-a-distributed-canvas-an-advanced-gui
+
+
+* Questions?
