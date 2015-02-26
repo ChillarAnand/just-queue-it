@@ -1,4 +1,4 @@
-#+AUTHOR: Anand Pandikunta
+#+AUTHOR: Anand Reddy Pandikunta
 
 #+STARTUP: showall
 
@@ -14,47 +14,30 @@
 #+BIND: org-confirm-babel-evaluate nil
 
 
-
 * Just Queue It!
+
 Queue Everything & Delight Everyone.
 
 
-* About This Talk.
+* What You Will Learn?
 
-Why Celery?
-
-How Celery Works?
-
-Running Tasks.
-
-Canvas Workflow.
-
-Monitoring Celery.
+Fundamentals of task queue.
 
 
-*  Why Celery?
+* What Is A Task Queue?
 
-***** Running Tasks In Background.
-***** Automatic Retrying Failed Tasks.
-***** Multi Processing.
-***** Scheduling Periodic Work.
-
-
-* What Is Celery?
-
-***** It’s a task queue with focus on real-time processing, while also supporting task scheduling.
-
-***** Task queues are used as a mechanism to distribute work across threads or machines.
+Taks Queue is a mechanism to distribute work across machines/threads.
 
 
 
-* How Celery Works?
+* How Task Queue Works?
+
 
 * A Simple Queue
 
 #+BEGIN_SRC ditaa :file queue.png :cmdline -r
 
-            Shopping Mall Queues
+            Paying Cash At Shopping Mall
 
                                         +-------------+
                                         |             |
@@ -70,17 +53,18 @@ Monitoring Celery.
 
 #+BEGIN_SRC ditaa :file python.png :cmdline -r
 
-             Processing A Set Of Prime Numbers
+             Processing A Set Of Numbers
 
                                         +-------------+
                                         |             |
                                         |             |
-              Primes ------------------>|   Python    |
+             Numbers ------------------>|   Python    |
                                         |             |
                                         |             |
                                         +-------------+
 
 #+END_SRC
+
 
 
 * Token Based Queue System
@@ -122,11 +106,12 @@ Monitoring Celery.
 #+END_SRC
 
 
-* Running a task with celery
+
+* A task queue
 
 #+BEGIN_SRC ditaa :file celery.png :cmdline -r
 
-                      Running A Task With Celery
+                      Running A Task With Task Queue
 
   +-----------------+
   |                 |
@@ -160,19 +145,52 @@ Monitoring Celery.
 
 #+END_SRC
 
+
+
+* Why Task Queues?
+
+
+
+* Running Tasks In Background.
+
+
+* Complete A Task With Retries.
+
+
+* Concurrency, Autoscaling
+
+
+* Scheduling Periodic Work.
+
+
+
+* Task Queue Implementation.
+
+Celery
+
+RQ
+
+
+
+* Celery
+
+It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+
+
+
 * Getting Started
 
-Install Celery
+Install Celery.
 
 Pick a broker & install it.
 
-Add tasks & start processing them.
+Create tasks & processing them.
 
 
 
 * Supported Brokers
-[[./brokers.png]]
 
+[[./brokers.png]]
 
 
 * Which Broker?
@@ -183,6 +201,7 @@ High volume tasks - RabbitMQ or Redis.
 
 
 * RabbitMQ
+
 (Designed for messaging)
 
 Advanced Routing.
@@ -193,11 +212,26 @@ Can push > 100k messages per second.
 
 
 * Redis
+
 (In memory data store)
 
 Lightweight.
 
 Blazing fast.
+
+
+* A simple function
+
+#+BEGIN_SRC python
+# task.py
+def add(x, y):
+    return x + y
+#+END_src
+
+#+BEGIN_SRC python
+# execute function
+result = add(3, 4)
+#+END_src
 
 
 * Tasks
@@ -217,76 +251,54 @@ def add(x, y):
 #+END_src
 
 #+BEGIN_SRC python
-
 # add tasks into queue
-
-result = add.apply_async(args=[3, 4])  # or
-
-result = add.delay(3, 4)
-
-#+END_src
-
-#+BEGIN_SRC python
-# check result
-result.ready()  # result.status
-result.get()
+async_result = add.apply_async([3, 4])
 #+END_src
 
 
 * Workers
 
 #+BEGIN_SRC sh
-
 celery worker --help  # all options
 
-celery worker -A task -l info -n foo_worker
-
-celery worker -A task -c 8 --logfile=foo.log
-
-celery worker -l info -A task -Q vip
-
+celery worker -A task -l info
 #+END_src
 
-#+BEGIN_SRC sh
 
-celery inspect active
 
-celery inspect active_queues
+* Results
 
-#+END_SRC
-
+#+BEGIN_SRC python
+# check result
+async_result.successful()
+async_result.state
+async_result.result
+#+END_src
 
 
 * Canvas Workflow
 
 #+BEGIN_SRC python
-
 add.s(2, 3)  # subtask - signature object
-
-add.si(2, 3)  # immutable signature object
 
 result = chain(add.s(2, 2), add.s(4))()  # chain
 
 result = group(add.s(i, i) for i in range(10))()  # group
 
 result = chord((add.s(i, i) for i in xrange(10)), xsum.s())()  # chord
-
 #+END_src
 
 
 * Routing
 
-#+BEGIN_SRC python
 
-# run multiple tasks
+#+BEGIN_SRC python
+# run tasks in queues
 
 add.apply_async([1, 2], queue='add_queue')
 
 sub.apply_async([3, 4], queue='sub_queue')
 
-#+END_src
-
-#+BEGIN_SRC sh
 
 # run multiple workers
 
@@ -297,39 +309,31 @@ celery worker -l info -A tasks -Q sub_queue
 #+END_src
 
 
+
 * Monitoring.
-
-Flower: Real-time monitor & web admin for Celery.
-
-
-* Web hooks
-
-Integrating with other languages/frameworks
-
-Call a task using GET/POST request & retrieve result.
 
 #+BEGIN_SRC sh
 
-curl -X POST http://localhost:5555/api/task/async-apply/my_app.test_task
+# ping workers
+celery inspect ping
+
+# dump active tasks
+celery inspect active
+
+# dump queues being consumed
+celery inspect active_queues
 
 #+END_SRC
+
+
+* Flower
+
+Real-time monitor & web admin for Celery.
 
 
 
 * Where To Go From Here?
 
-
-Celery Docs: http://celery.readthedocs.org/
-
-Celery IRC:  #celery
-
-Flower REST API: http://nbviewer.ipython.org/github/mher/flower/blob/master/docs/api.ipynb
-
-CELERY - BEST PRACTICES: https://denibertovic.com/posts/celery-best-practices/
-
-3 GOTCHAS FOR CELERY: http://wiredcraft.com/blog/3-gotchas-for-celery/
-
-Advanced task management with celery: http://pyvideo.org/video/2843/painting-on-a-distributed-canvas-an-advanced-gui
 
 
 * Questions?
