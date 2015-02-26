@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <title>celery</title>
-<meta name="author" content="(Anand Pandikunta)"/>
+<meta name="author" content="(Anand Reddy Pandikunta)"/>
 
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.5.0/css/reveal.min.css"/>
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.5.0/css/theme/simple.css" id="theme"/>
@@ -23,12 +23,12 @@
 </head>
 <body>
 <div class="reveal">
-  <div class='footer'>
-      <span>Anand Reddy Pandikunta (@chillaranand)</span>
-      <a href="http://www.avilpage.com">http://avilpage.com</a>
-  </div>
-
 <div class="slides">
+<section>
+<h1>celery</h1>
+<h2>Anand Reddy Pandikunta</h2>
+<h2><a href="mailto:anand@anand-X550EA">anand@anand-X550EA</a></h2>
+<h2></h2></section>
 
 
 <section>
@@ -45,25 +45,9 @@ Queue Everything &amp; Delight Everyone.
 <section>
 <section id="sec-2" >
 
-<h2>About This Talk.</h2>
+<h2>What You Will Learn?</h2>
 <p>
-Why Celery?
-</p>
-
-<p>
-How Celery Works?
-</p>
-
-<p>
-Running Tasks.
-</p>
-
-<p>
-Canvas Workflow.
-</p>
-
-<p>
-Monitoring Celery.
+Fundamentals of task queue.
 </p>
 </section>
 
@@ -72,36 +56,25 @@ Monitoring Celery.
 <section>
 <section id="sec-3" >
 
-<h2>Why Celery?</h2>
-<ul class="org-ul"><li class="fragment none">Running Tasks In Background.<br/></li>
-<li class="fragment none">Automatic Retrying Failed Tasks.<br/></li>
-<li class="fragment none">Multi Processing.<br/></li>
-<li class="fragment none">Scheduling Periodic Work.<br/></li></ul>
+<h2>What Is A Task Queue?</h2>
+<p>
+Taks Queue is a mechanism to distribute work across machines/threads.
+</p>
 </section>
+
 
 
 </section>
 <section>
 <section id="sec-4" >
 
-<h2>What Is Celery?</h2>
-<ul class="org-ul"><li class="fragment none">It’s a task queue with focus on real-time processing, while also supporting task scheduling.<br/></li>
-
-<li class="fragment none">Task queues are used as a mechanism to distribute work across threads or machines.<br/></li></ul>
+<h2>How Task Queue Works?</h2>
 </section>
-
 
 
 </section>
 <section>
 <section id="sec-5" >
-
-<h2>How Celery Works?</h2>
-</section>
-
-</section>
-<section>
-<section id="sec-6" >
 
 <h2>A Simple Queue</h2>
 <img src="queue.png" alt="queue.png" />
@@ -109,37 +82,111 @@ Monitoring Celery.
 
 </section>
 <section>
-<section id="sec-7" >
+<section id="sec-6" >
 
 <h2>A Simple Python Process</h2>
 <img src="python.png" alt="python.png" />
 </section>
 
 
+
 </section>
 <section>
-<section id="sec-8" >
+<section id="sec-7" >
 
 <h2>Token Based Queue System</h2>
 <img src="bank.png" alt="bank.png" />
 </section>
 
 
+
+</section>
+<section>
+<section id="sec-8" >
+
+<h2>A task queue</h2>
+<img src="celery.png" alt="celery.png" />
+</section>
+
+
+
 </section>
 <section>
 <section id="sec-9" >
 
-<h2>Running a task with celery</h2>
-<img src="celery.png" alt="celery.png" />
+<h2>Why Task Queues?</h2>
 </section>
+
+
 
 </section>
 <section>
 <section id="sec-10" >
 
+<h2>Running Tasks In Background.</h2>
+</section>
+
+
+</section>
+<section>
+<section id="sec-11" >
+
+<h2>Complete A Task With Retries.</h2>
+</section>
+
+
+</section>
+<section>
+<section id="sec-12" >
+
+<h2>Multi Processing.</h2>
+</section>
+
+
+</section>
+<section>
+<section id="sec-13" >
+
+<h2>Scheduling Periodic Work.</h2>
+</section>
+
+
+
+</section>
+<section>
+<section id="sec-14" >
+
+<h2>Task Queue Implementation.</h2>
+<p>
+Celery
+</p>
+
+<p>
+RQ
+</p>
+</section>
+
+
+
+</section>
+<section>
+<section id="sec-15" >
+
+<h2>Celery</h2>
+<p>
+It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+</p>
+</section>
+
+
+
+</section>
+<section>
+<section id="sec-16" >
+
 <h2>Getting Started</h2>
 <p>
-Install Celery
+Install Celery.
 </p>
 
 <p>
@@ -147,7 +194,7 @@ Pick a broker &amp; install it.
 </p>
 
 <p>
-Add tasks &amp; start processing them.
+Create tasks &amp; processing them.
 </p>
 </section>
 
@@ -155,17 +202,16 @@ Add tasks &amp; start processing them.
 
 </section>
 <section>
-<section id="sec-11" >
+<section id="sec-17" >
 
 <h2>Supported Brokers</h2>
 <img src="./brokers.png" alt="brokers.png" />
 </section>
 
 
-
 </section>
 <section>
-<section id="sec-12" >
+<section id="sec-18" >
 
 <h2>Which Broker?</h2>
 <p>
@@ -180,7 +226,7 @@ High volume tasks - RabbitMQ or Redis.
 
 </section>
 <section>
-<section id="sec-13" >
+<section id="sec-19" >
 
 <h2>RabbitMQ</h2>
 <p>
@@ -203,7 +249,7 @@ Can push &gt; 100k messages per second.
 
 </section>
 <section>
-<section id="sec-14" >
+<section id="sec-20" >
 
 <h2>Redis</h2>
 <p>
@@ -222,7 +268,27 @@ Blazing fast.
 
 </section>
 <section>
-<section id="sec-15" >
+<section id="sec-21" >
+
+<h2>A simple function</h2>
+<div class="org-src-container">
+
+<pre  class="src src-python"><span style="color: #a020f0;">def</span> <span style="color: #0000ff;">add</span>(x, y):
+<span style="background-color: #f2f2f2;"> </span>   <span style="color: #a020f0;">return</span> x + y
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-python"><span style="color: #a0522d;">result</span> = add(3, 4)
+</pre>
+</div>
+</section>
+
+
+</section>
+<section>
+<section id="sec-22" >
 
 <h2>Tasks</h2>
 <div class="org-src-container">
@@ -243,18 +309,7 @@ Blazing fast.
 <div class="org-src-container">
 
 <pre  class="src src-python"><span style="color: #b22222;"># </span><span style="color: #b22222;">add tasks into queue</span>
-
-<span style="color: #a0522d;">result</span> = add.apply_async(args=[3, 4])  <span style="color: #b22222;"># </span><span style="color: #b22222;">or</span>
-
-<span style="color: #a0522d;">result</span> = add.delay(3, 4)
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre  class="src src-python"><span style="color: #b22222;"># </span><span style="color: #b22222;">check result</span>
-result.ready()  <span style="color: #b22222;"># </span><span style="color: #b22222;">result.status</span>
-result.get()
+<span style="color: #a0522d;">async_result</span> = add.delay(3, 4)
 </pre>
 </div>
 </section>
@@ -262,26 +317,14 @@ result.get()
 
 </section>
 <section>
-<section id="sec-16" >
+<section id="sec-23" >
 
 <h2>Workers</h2>
 <div class="org-src-container">
 
 <pre  class="src src-sh">celery worker --help  <span style="color: #b22222;"># </span><span style="color: #b22222;">all options</span>
 
-celery worker -A task -l info -n foo_worker
-
-celery worker -A task -c 8 --logfile=foo.log
-
-celery worker -l info -A task -Q vip
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre  class="src src-sh">celery inspect active
-
-celery inspect active_queues
+celery worker -A task -l info
 </pre>
 </div>
 </section>
@@ -290,7 +333,23 @@ celery inspect active_queues
 
 </section>
 <section>
-<section id="sec-17" >
+<section id="sec-24" >
+
+<h2>Results</h2>
+<div class="org-src-container">
+
+<pre  class="src src-python"><span style="color: #b22222;"># </span><span style="color: #b22222;">check result</span>
+async_result.successful()
+async_result.state
+async_result.result
+</pre>
+</div>
+</section>
+
+
+</section>
+<section>
+<section id="sec-25" >
 
 <h2>Canvas Workflow</h2>
 <div class="org-src-container">
@@ -311,22 +370,19 @@ add.si(2, 3)  <span style="color: #b22222;"># </span><span style="color: #b22222
 
 </section>
 <section>
-<section id="sec-18" >
+<section id="sec-26" >
 
 <h2>Routing</h2>
 <div class="org-src-container">
 
-<pre  class="src src-python"><span style="color: #b22222;"># </span><span style="color: #b22222;">run multiple tasks</span>
+<pre  class="src src-python"><span style="color: #b22222;"># </span><span style="color: #b22222;">run tasks in queues</span>
 
 add.apply_async([1, 2], queue=<span style="color: #8b2252;">'add_queue'</span>)
 
 sub.apply_async([3, 4], queue=<span style="color: #8b2252;">'sub_queue'</span>)
-</pre>
-</div>
 
-<div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">run multiple workers</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">run multiple workers</span>
 
 celery worker -l info -A tasks -Q add_queue
 
@@ -336,69 +392,48 @@ celery worker -l info -A tasks -Q sub_queue
 </section>
 
 
+
 </section>
 <section>
-<section id="sec-19" >
+<section id="sec-27" >
 
 <h2>Monitoring.</h2>
-<p>
-Flower: Real-time monitor &amp; web admin for Celery.
-</p>
-</section>
-
-
-</section>
-<section>
-<section id="sec-20" >
-
-<h2>Web hooks</h2>
-<p>
-Integrating with other languages/frameworks
-</p>
-
-<p>
-Call a task using GET/POST request &amp; retrieve result.
-</p>
-
 <div class="org-src-container">
 
-<pre  class="src src-sh">curl -X POST http://localhost:5555/api/task/async-apply/my_app.test_task
+<pre  class="src src-sh">celery inspect ping
+
+celery inspect active
+
+celery inspect active_queues
 </pre>
 </div>
 </section>
 
 
+</section>
+<section>
+<section id="sec-28" >
+
+<h2>Flower</h2>
+<p>
+Real-time monitor &amp; web admin for Celery.
+</p>
+</section>
+
+
 
 </section>
 <section>
-
-<section id="sec-21" >
+<section id="sec-29" >
 
 <h2>Where To Go From Here?</h2>
-<p>
-References:
-
-<a href="http://celery.readthedocs.org/">Celery Docs</a>,
-<a href="http://nbviewer.ipython.org/github/mher/flower/blob/master/docs/api.ipynb">FLower REST API</a>
-</p>
-
-<p>
-Articles:
-
-    <a href="https://denibertovic.com/posts/celery-best-practices/">Best Practices</a>,
-    <a href="http://wiredcraft.com/blog/3-gotchas-for-celery/">Gotchas for Celery</a>
-</p>
-
-<p>
-Talks:
-
-<a href="http://pyvideo.org/video/2843/painting-on-a-distributed-canvas-an-advanced-gui">Distributed Canvas Workflow</a>
-</p>
 </section>
+
+
 
 </section>
 <section>
-<section id="sec-22" >
+<section id="sec-30" >
 
 <h2>Questions?</h2>
 </section>
@@ -438,17 +473,5 @@ dependencies: [
 ]
 });
 </script>
-
-
-<style>
-.reveal .footer {
-  position: absolute;
-  bottom: 1em;
-  left: 1em;
-  font-size: 0.5em;
-}
-</style>
-
-
 </body>
 </html>
